@@ -172,14 +172,14 @@ void PIDReportHandler::SetEffect(USB_FFBReport_SetEffect_Output_Data_t *data)
 	effect->gain = data->gain;
 	effect->enableAxis = data->enableAxis;
 
-	Serial.print("dX: ");
-	Serial.print(effect->directionX);
-	Serial.print(" dX: ");
-	Serial.print(effect->directionY);
-	Serial.print(" eT: ");
-	Serial.print(effect->effectType);
-	Serial.print(" eA: ");
-	Serial.println(effect->enableAxis);
+	// Serial.print("dX: ");
+	// Serial.print(effect->directionX);
+	// Serial.print(" dY: ");
+	// Serial.print(effect->directionY);
+	// Serial.print(" eT: ");
+	// Serial.print(effect->effectType);
+	// Serial.print(" eA: ");
+	// Serial.println(effect->enableAxis);
 }
 
 void PIDReportHandler::SetEnvelope(USB_FFBReport_SetEnvelope_Output_Data_t *data, volatile TEffectState *effect)

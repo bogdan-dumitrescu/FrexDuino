@@ -561,6 +561,24 @@ int32_t Joystick_::getEffectForce(volatile TEffectState& effect, Gains _gains, E
 	    		break;
 	    }
 	    effect.elapsedTime = (uint64_t)millis() - effect.startTime;
+
+		// if (effect.magnitude > 0) { 
+		// 	Serial.print("t: ");
+		// 	Serial.print(effect.effectType);
+
+		// 	Serial.print(" / mg:");
+		// 	Serial.print(effect.magnitude);
+
+		// 	Serial.print(" / dr:");
+		// 	Serial.print(effect.duration);
+
+		// 	Serial.print(" / el:");
+		// 	Serial.print(effect.elapsedTime);
+
+		// 	Serial.print(" / fr: ");
+		// 	Serial.println(force);
+		// }
+
 		return force;
 }
 
