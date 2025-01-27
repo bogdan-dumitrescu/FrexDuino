@@ -3,99 +3,51 @@
 #include <Joystick.h>
 #include <DigitalWriteFast.h>
 
-#include <consts.h>
+#include <config.h>
+#include <xAxisEnoder.h>
+#include <motorPwm.h>
+#include <buttons.h>
+#include <logger.h>
 
-#include <pwm.h>
-
-bool isOutOfRange = false;
-int32_t forces[1] = {0};
-Gains gains[1];
-EffectParams effectparams[1];
-
-Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_JOYSTICK,
-                   0, 0,                 // Button Count, Hat Switch Count
+Joystick_ Joystick(0x03, JOYSTICK_TYPE_JOYSTICK,
+                   numberOfButtons, 0,   // Button Count, Hat Switch Count
                    true, false, false,   // X, Y, Z Axis
                    false, false, false,  // Rx, Ry, Rz
                    false, false,         // rudder, throttle
                    false, false, false); // accelerator, brake, steering
 
-unsigned long lastLog = 0;
+Gains gains[1];
+EffectParams effectParams[1];
+int32_t forces[1] = {0};
 
-volatile long value = 0;
-int32_t g_force = 0;
+uint8_t buttons[numberOfButtons];
 
-int32_t currentPosition = 0;
-volatile int8_t oldState = 0;
-const int8_t KNOBDIR[] = {
-    0, 1, -1, 0,
-    -1, 0, 0, 1,
-    1, 0, 0, -1,
-    0, -1, 1, 0};
+unsigned long centeringBttnLastReleased = millis();
+const unsigned long centeringBttnLongPressThreshold = 2500;
 
-void tick(void)
+void setWheelConfig()
 {
-  int sig1 = digitalReadFast(encoderPinA);
-  int sig2 = digitalReadFast(encoderPinB);
-  int8_t thisState = sig1 | (sig2 << 1);
-
-  if (oldState != thisState)
-  {
-    currentPosition += KNOBDIR[thisState | (oldState << 2)];
-    oldState = thisState;
-  }
-}
-
-void timingMagic()
-{
-  cli();
-  TCCR3A = 0; // set TCCR1A 0
-  TCCR3B = 0; // set TCCR1B 0
-  TCNT3 = 0;  // counter init
-  OCR3A = 399;
-  TCCR3B |= (1 << WGM32); // open CTC mode
-  TCCR3B |= (1 << CS31);  // set CS11 1(8-fold Prescaler)
-  TIMSK3 |= (1 << OCIE3A);
-  sei();
+  gains[0].totalGain = getConfig().gain;
+  Joystick.setGains(gains);
 }
 
 void setup()
 {
   Serial.begin(115200);
 
-  pinMode(encoderPinA, INPUT_PULLUP);
-  pinMode(encoderPinB, INPUT_PULLUP);
+  initConfig();
+  initXAxisEncoder();
+  initPwmPins();
+  initBttnMatrixPins();
 
-  attachInterrupt(digitalPinToInterrupt(encoderPinA), tick, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(encoderPinB), tick, CHANGE);
+  Joystick.setXAxisRange(encoderMinValue, encoderMaxValue);
 
-  Joystick.setXAxisRange(ENCODER_MIN_VALUE, ENCODER_MAX_VALUE);
+  setWheelConfig();
 
-  gains[0].totalGain = 10;
-
-  gains[0].constantGain = 100;
-  gains[0].rampGain = 100;
-
-  gains[0].squareGain = 100;
-  gains[0].sineGain = 60;
-
-  gains[0].triangleGain = 100;
-  gains[0].sawtoothdownGain = 100;
-  gains[0].sawtoothupGain = 100;
-
-  gains[0].springGain = 0;
-  gains[0].damperGain = 100;
-  gains[0].inertiaGain = 0;
-  gains[0].frictionGain = 100;
-
-  gains[0].customGain = 0;
-
-  Joystick.setGains(gains);
+  // these need to be set, otherwise weird / unexpected behavior happens during spring effects
+  Joystick.setEffectParams(effectParams);
 
   Joystick.begin(true);
-
-  timingMagic(); // is this to intercept the encoder values?
-
-  InitPWM();
 }
 
 ISR(TIMER3_COMPA_vect)
@@ -103,46 +55,39 @@ ISR(TIMER3_COMPA_vect)
   Joystick.getUSBPID();
 }
 
-bool shouldLog() {
-  return millis() - lastLog > 1000;
+void checkForCenteringLongPress()
+{
+  if (buttons[0])
+  {
+    if ((millis() - centeringBttnLastReleased) > centeringBttnLongPressThreshold)
+    {
+      resetCurrentPosition();
+    }
+  }
+  else
+  {
+    centeringBttnLastReleased = millis();
+  }
 }
 
 void loop()
 {
-  value = currentPosition;
+  int32_t currentPosition = getCurrentPosition();
 
-  if (value > ENCODER_MAX_VALUE)
-  {
-    isOutOfRange = true;
-    value = ENCODER_MAX_VALUE;
-  }
-  else if (value < ENCODER_MIN_VALUE)
-  {
-    isOutOfRange = true;
-    value = ENCODER_MIN_VALUE;
-  }
-  else
-  {
-    isOutOfRange = false;
-  }
+  readButtons(buttons);
+  checkForCenteringLongPress();
 
-  Joystick.setXAxis(value);
+  Joystick.setAllButtons(buttons);
+  Joystick.setXAxis(currentPosition);
 
-  effectparams[0].springMaxPosition = ENCODER_MAX_VALUE;
-  effectparams[0].springPosition = value;
-
-  Joystick.setEffectParams(effectparams);
   Joystick.getForce(forces);
 
-  SetPWM(forces[0]);
+  setMotorPwm(forces[0]);
 
-  // if (shouldLog()) {
-  //     Serial.print("Force: ");
-  //     Serial.println(forces[0]);
+  log(currentPosition, forces[0], buttons);
 
-  //     // Serial.print("Encoder value: ");
-  //     // Serial.println(currentPosition);
-
-  //     lastLog = millis();
-  // }
+  if (processSerialCfgCmds())
+  {
+    setWheelConfig();
+  }
 }
