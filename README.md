@@ -98,7 +98,7 @@ You need to configure the constant `ENCODER_PPR` to match your optical encoder. 
 
 Frex came with adjustable hard stops for limiting the rotation. The `WHEEL_TOTAL_DEGREES` constant should be set to the number of degrees the Frex wheel can move between these hard stops (1 full wheel rotation = 360 degrees). 
 
-**Note:** it is not needed (or recommended) to modify this number after setting it the first time unless the wheel's hard stops are actually adjusted as well. If you need to virtually limit the rotation of your wheel to accommodate an older game, you should use [DXTweak2](https://www.xsimulator.net/community/marketplace/dxtweak2-change-calibration-and-deadzone-settings-of-a-directinput-game-controller.245/). FrexDuino will work fine with whatever limits you set in DXTweak2.
+**Note:** it is not needed (or recommended) to modify this number after setting it the first time, unless the wheel's hard stops are actually adjusted as well. If you need to virtually limit the rotation of your wheel to accommodate an older game, you should use [DXTweak2](https://www.xsimulator.net/community/marketplace/dxtweak2-change-calibration-and-deadzone-settings-of-a-directinput-game-controller.245/). FrexDuino will work fine with whatever limits you set in DXTweak2.
 
 ### Centering the wheel
 
@@ -106,7 +106,7 @@ After plugging your FrexDuino in, manually center the steering wheel. Afterward 
 
 ### Adjusting the FFB gain
 
-**Warning!** The Frex gearing can generate a lot of torque at the wheel. By default, FrexDuino's FFB gain (strength) is set to 25%. This can already feel quite strong, so test with care the first time you plug in the wheel.
+**Warning!** The Frex gearing can generate a lot of torque at the wheel. By default, FrexDuino's FFB gain (strength) is set to 25%. This can already feel quite strong, so test with care the first time you plug the wheel in.
 
 A simple [open-source](https://github.com/bogdan-dumitrescu/frexduino-console) tool is included in the `utils` folder of this project. It allows you to adjust FrexDuino's FFB gain without having to recompile the firmware. The gain adjustment tool requires Java to be installed on your system (version 8 or higher). Once Java is installed, you can adjust the gain by opening a command prompt in the directory of this project and running:
 
