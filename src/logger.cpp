@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#include <buttons.h>
+#include <constants.h>
 
 unsigned long lastLog = 0;
 
@@ -8,7 +8,10 @@ char data[100];
 
 bool shouldLog()
 {
-    return false;
+    if (!DEBUG)
+    {
+        return false;
+    }
     return millis() - lastLog > 1000;
 }
 
@@ -28,7 +31,7 @@ void logButtons(uint8_t *buttons)
 {
     Serial.print("Btts: ");
 
-    for (uint8_t i = 0; i < numberOfButtons; i++)
+    for (uint8_t i = 0; i < BTN_COUNT; i++)
     {
         Serial.print(buttons[i]);
         Serial.print(" ");

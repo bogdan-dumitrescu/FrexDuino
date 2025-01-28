@@ -3,13 +3,12 @@
 #include <Joystick.h>
 #include <DigitalWriteFast.h>
 
-#include <xAxisEnoder.h>
-
 #define encoderPinA 2
 #define encoderPinB 3
 
-int32_t currentPosition = 0;
+volatile int32_t currentPosition = 0;
 volatile int8_t oldState = 0;
+
 const int8_t knobDirection[] = {
     0, 1, -1, 0,
     -1, 0, 0, 1,

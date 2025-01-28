@@ -2,8 +2,12 @@
 #include <EEPROM.h>
 
 #include <config.h>
+#include <constants.h>
 
 const uint8_t cmdSize = 8;
+const char initialized[7] = "ISINIT";
+
+const uint8_t configAddress = sizeof(initialized);
 
 const char writeCommand[cmdSize] = "FD:CFGW";
 const char readCommand[cmdSize] = "FD:CFGR";
@@ -17,17 +21,35 @@ unsigned long lastSerialCheck = millis();
 
 void saveToEeprom()
 {
-    EEPROM.put(0, config);
+    EEPROM.put(configAddress, config);
+}
+
+bool configInitialized()
+{
+    EEPROM.get(0, inputBuffer);
+
+    for (uint8_t i = 0; i < sizeof(initialized) - 1; i++)
+    {
+        if (inputBuffer[i] != initialized[i])
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 void initConfig()
 {
-    EEPROM.get(0, config);
-
-    if (config.gain > 100 || config.gain < 0)
+    if (configInitialized())
     {
-        config.gain = defaultGain;
+        EEPROM.get(configAddress, config);
+    }
+    else
+    {
+        config.gain = DEFAULT_GAIN;
         saveToEeprom();
+        EEPROM.put(0, initialized);
     }
 }
 
@@ -36,7 +58,7 @@ Config getConfig()
     return config;
 }
 
-boolean isCommand(const char *command)
+bool isCommand(const char *command)
 {
     for (uint8_t i = 0; i < cmdSize - 1; i++)
     {

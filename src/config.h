@@ -1,10 +1,8 @@
 #include <Arduino.h>
 
-const uint8_t defaultGain = 25;
-
 struct Config
 {
-    uint8_t gain = defaultGain;
+    uint8_t gain;
 };
 
 void initConfig();

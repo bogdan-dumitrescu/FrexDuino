@@ -3,6 +3,8 @@
 #include <Joystick.h>
 #include <DigitalWriteFast.h>
 
+#include <constants.h>
+
 #include <config.h>
 #include <xAxisEnoder.h>
 #include <motorPwm.h>
@@ -10,7 +12,7 @@
 #include <logger.h>
 
 Joystick_ Joystick(0x03, JOYSTICK_TYPE_JOYSTICK,
-                   numberOfButtons, 0,   // Button Count, Hat Switch Count
+                   BTN_COUNT, 0,         // Button Count, Hat Switch Count
                    true, false, false,   // X, Y, Z Axis
                    false, false, false,  // Rx, Ry, Rz
                    false, false,         // rudder, throttle
@@ -20,10 +22,9 @@ Gains gains[1];
 EffectParams effectParams[1];
 int32_t forces[1] = {0};
 
-uint8_t buttons[numberOfButtons];
+uint8_t buttons[BTN_COUNT];
 
 unsigned long centeringBttnLastReleased = millis();
-const unsigned long centeringBttnLongPressThreshold = 2500;
 
 void setWheelConfig()
 {
@@ -40,7 +41,7 @@ void setup()
   initPwmPins();
   initBttnMatrixPins();
 
-  Joystick.setXAxisRange(encoderMinValue, encoderMaxValue);
+  Joystick.setXAxisRange(ENCODER_MIN_VALUE, ENCODER_MAX_VALUE);
 
   setWheelConfig();
 
@@ -57,9 +58,9 @@ ISR(TIMER3_COMPA_vect)
 
 void checkForCenteringLongPress()
 {
-  if (buttons[0])
+  if (buttons[CENTERING_BTN])
   {
-    if ((millis() - centeringBttnLastReleased) > centeringBttnLongPressThreshold)
+    if ((millis() - centeringBttnLastReleased) > CTR_LNG_PRS_TRESH_MS)
     {
       resetCurrentPosition();
     }

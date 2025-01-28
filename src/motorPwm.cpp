@@ -7,19 +7,19 @@
 #define pwmRight 10
 #define pwmEnable 11
 
-uint16_t minUpdateRate = 60;
-uint16_t maxUpdateRate = 1000; // set PWM to this frequency to get maximum possible motor torque
+const uint16_t minUpdateRate = 60;
+const uint16_t maxUpdateRate = 1000; // set PWM to this frequency to get maximum possible motor torque
 
 void pwm16Begin()
 {
     // Stop Timer/Counter1
-    TCCR1A = 0;          // Timer/Counter1 Control Register A
-    TCCR1B = 0;          // Timer/Counter1 Control Register B
-    TIMSK1 = 0;          // Timer/Counter1 Interrupt Mask Register
-    TIFR1 = 0;           // Timer/Counter1 Interrupt Flag Register
-    ICR1 = maxUpdateRate; // set upper counter flag
-    OCR1A = minUpdateRate;           // Default to 0% PWM, D9
-    OCR1B = minUpdateRate;           // Default to 0% PWM, D10
+    TCCR1A = 0;            // Timer/Counter1 Control Register A
+    TCCR1B = 0;            // Timer/Counter1 Control Register B
+    TIMSK1 = 0;            // Timer/Counter1 Interrupt Mask Register
+    TIFR1 = 0;             // Timer/Counter1 Interrupt Flag Register
+    ICR1 = maxUpdateRate;  // set upper counter flag
+    OCR1A = minUpdateRate; // Default to 0% PWM, D9
+    OCR1B = minUpdateRate; // Default to 0% PWM, D10
 
     // fast pwm mode
     TCCR1A |= (1 << WGM11);
