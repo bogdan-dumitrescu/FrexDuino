@@ -2,7 +2,7 @@
 
 ### About this project
 
-FrexDuino has been specifically developed to support the [Frex SimWHEEL (v1)](https://www.youtube.com/watch?v=tcqOE-FSnFI). The Frex was originally delivered with an Immersion FFB controller. This controller works fine, but only with 32bit games. Many 64bit games (Asseto Corsa, Automobilista 2, Dirt 2) crash when using the Immersion driver.
+FrexDuino has been specifically developed to support the [Frex SimWHEEL (v1)](https://www.youtube.com/watch?v=tcqOE-FSnFI). The Frex was originally delivered with an Immersion FFB controller. This controller works fine, but only with 32bit games. Many 64bit games (Asseto Corsa, Automobilista 2, Dirt Rally 2) crash when using the Immersion driver.
 
 An Arduino Leonardo running the FrexDuino firmware will be recognized by Windows as a generic input device with force feedback capabilities. This solves the Immersion driver issue by simply not using that driver.
 
