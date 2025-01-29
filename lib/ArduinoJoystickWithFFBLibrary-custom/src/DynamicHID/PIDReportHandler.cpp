@@ -1,5 +1,7 @@
 #include "PIDReportHandler.h"
 
+char debugBuffer[100];
+
 PIDReportHandler::PIDReportHandler()
 {
 	nextEID = 1;
@@ -78,6 +80,9 @@ void PIDReportHandler::EffectOperation(USB_FFBReport_EffectOperation_Output_Data
 		if (data->loopCount == 0xFF)
 			g_EffectStates[data->effectBlockIndex].duration = USB_DURATION_INFINITE;
 		StartEffect(data->effectBlockIndex);
+
+		sprintf(debugBuffer, "OStrt: %3d", data->effectBlockIndex);
+		Serial.print(debugBuffer);
 	}
 	else if (data->operation == 2)
 	{ // StartSolo
@@ -86,13 +91,21 @@ void PIDReportHandler::EffectOperation(USB_FFBReport_EffectOperation_Output_Data
 		StopAllEffects();
 		// Then start the given effect
 		StartEffect(data->effectBlockIndex);
+
+		sprintf(debugBuffer, "OSolo: %3d", data->effectBlockIndex);
+		Serial.print(debugBuffer);
 	}
 	else if (data->operation == 3)
 	{ // Stop
 		StopEffect(data->effectBlockIndex);
+
+		sprintf(debugBuffer, "OStop: %3d", data->effectBlockIndex);
+		Serial.print(debugBuffer);
 	}
 	else
 	{
+		sprintf(debugBuffer, "OUnkw: %3d", data->effectBlockIndex);
+		Serial.print(debugBuffer);
 	}
 }
 
@@ -172,14 +185,8 @@ void PIDReportHandler::SetEffect(USB_FFBReport_SetEffect_Output_Data_t *data)
 	effect->gain = data->gain;
 	effect->enableAxis = data->enableAxis;
 
-	// Serial.print("dX: ");
-	// Serial.print(effect->directionX);
-	// Serial.print(" dY: ");
-	// Serial.print(effect->directionY);
-	// Serial.print(" eT: ");
-	// Serial.print(effect->effectType);
-	// Serial.print(" eA: ");
-	// Serial.println(effect->enableAxis);
+	sprintf(debugBuffer, "SetEf: %3d (%3d)", data->effectBlockIndex, effect->effectType);
+	Serial.print(debugBuffer);
 }
 
 void PIDReportHandler::SetEnvelope(USB_FFBReport_SetEnvelope_Output_Data_t *data, volatile TEffectState *effect)
