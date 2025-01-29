@@ -102,7 +102,7 @@ Frex came with adjustable hard stops for limiting the rotation. The `WHEEL_TOTAL
 
 ### Centering the wheel
 
-After plugging your FrexDuino in, manually center the steering wheel. Afterward long-press `Button 1` to reset the axis to center. You can see which button is `1` in Windows's "USB Controllers" application. The button that triggers the centering as well as the long-press threshold can be configured in [code](src/constants.h).
+After plugging your FrexDuino in, manually center the steering wheel. Afterward long-press `Button 1` to reset the axis to center. In Windows, you can see which button is `1` in the "Set up USB game controllers" application. The button that triggers the centering as well as the long-press threshold can be configured in [code](src/constants.h).
 
 ### Adjusting the FFB gain
 
