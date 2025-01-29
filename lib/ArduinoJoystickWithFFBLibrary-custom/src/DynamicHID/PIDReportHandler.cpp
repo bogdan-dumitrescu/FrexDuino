@@ -52,16 +52,16 @@ void PIDReportHandler::StopEffect(uint8_t id)
 	if (id > MAX_EFFECTS)
 		return;
 	g_EffectStates[id].state &= ~MEFFECTSTATE_PLAYING;
-	pidBlockLoad.ramPoolAvailable += SIZE_EFFECT;
 }
 
 void PIDReportHandler::FreeEffect(uint8_t id)
 {
 	if (id > MAX_EFFECTS)
 		return;
-	g_EffectStates[id].state = 0;
+	g_EffectStates[id].state = MEFFECTSTATE_FREE;
 	if (id < nextEID)
 		nextEID = id;
+	pidBlockLoad.ramPoolAvailable += SIZE_EFFECT;
 }
 
 void PIDReportHandler::FreeAllEffects(void)
@@ -81,8 +81,8 @@ void PIDReportHandler::EffectOperation(USB_FFBReport_EffectOperation_Output_Data
 			g_EffectStates[data->effectBlockIndex].duration = USB_DURATION_INFINITE;
 		StartEffect(data->effectBlockIndex);
 
-		sprintf(debugBuffer, "OStrt: %3d", data->effectBlockIndex);
-		Serial.print(debugBuffer);
+		// sprintf(debugBuffer, "OStrt: %2d", data->effectBlockIndex);
+		// Serial.println(debugBuffer);
 	}
 	else if (data->operation == 2)
 	{ // StartSolo
@@ -92,20 +92,20 @@ void PIDReportHandler::EffectOperation(USB_FFBReport_EffectOperation_Output_Data
 		// Then start the given effect
 		StartEffect(data->effectBlockIndex);
 
-		sprintf(debugBuffer, "OSolo: %3d", data->effectBlockIndex);
-		Serial.print(debugBuffer);
+		// sprintf(debugBuffer, "OSolo: %2d", data->effectBlockIndex);
+		// Serial.println(debugBuffer);
 	}
 	else if (data->operation == 3)
 	{ // Stop
 		StopEffect(data->effectBlockIndex);
 
-		sprintf(debugBuffer, "OStop: %3d", data->effectBlockIndex);
-		Serial.print(debugBuffer);
+		// sprintf(debugBuffer, "OStop: %2d", data->effectBlockIndex);
+		// Serial.println(debugBuffer);
 	}
 	else
 	{
-		sprintf(debugBuffer, "OUnkw: %3d", data->effectBlockIndex);
-		Serial.print(debugBuffer);
+		// sprintf(debugBuffer, "OUnkw: %2d", data->effectBlockIndex);
+		// Serial.println(debugBuffer);
 	}
 }
 
@@ -185,8 +185,8 @@ void PIDReportHandler::SetEffect(USB_FFBReport_SetEffect_Output_Data_t *data)
 	effect->gain = data->gain;
 	effect->enableAxis = data->enableAxis;
 
-	sprintf(debugBuffer, "SetEf: %3d (%3d)", data->effectBlockIndex, effect->effectType);
-	Serial.print(debugBuffer);
+	// sprintf(debugBuffer, "SetEf: %2d (%d), duration: %d", data->effectBlockIndex, effect->effectType, effect->duration);
+	// Serial.println(debugBuffer);
 }
 
 void PIDReportHandler::SetEnvelope(USB_FFBReport_SetEnvelope_Output_Data_t *data, volatile TEffectState *effect)
