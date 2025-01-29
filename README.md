@@ -2,7 +2,7 @@
 
 ### About this project
 
-FrexDuino has been specifically developed to support the [Frex SimWHEEL (v1)](https://www.youtube.com/watch?v=tcqOE-FSnFI). The Frex was originally delivered with an Immersion FFB controller. This controller works fine, but only with 32bit games. Many 64bit games (Asseto Corsa, Automobilista 2, Dirt Rally 2) crash when using the Immersion driver.
+FrexDuino has been specifically developed to support the [Frex SimWHEEL (v1)](https://www.youtube.com/watch?v=tcqOE-FSnFI). The Frex was originally delivered with an Immersion FFB controller. This controller works fine, but only with 32bit games. Many 64bit games (Asseto Corsa, Automobilista 2, Dirt Rally 2.0) crash when using the Immersion driver.
 
 An Arduino Leonardo running the FrexDuino firmware will be recognized by Windows as a generic input device with force feedback capabilities. This solves the Immersion driver issue by simply not using that driver.
 
@@ -121,6 +121,10 @@ The above command will attempt to find the FrexDuino device currently connected 
 **Q: Does this actually work?**
 
 **A:** Yes, most definitely. So far I have tested a FrexDuino box with GT Legends, GTR2, Automobilista 2, and iRacing. All work fine and provide the expected force feedback. Looking forward to hearing your feedback as well!
+
+**Q: Is there an issue with the force feedback in Dirt Rally 2.0?**
+
+**A:** FrexDuino will be recognized by Dirt Rally 2.0 - you can configure it as the primary steering device. After configuring the controls, in order to get FFB working in Dirt Rally 2.0, always start the game with FrexDuino's USB connection unplugged. After the game asks you to press enter to start, plug in the USB cable. Dirt Rally 2.0 will notify you that a controller was added - the FFB should work now. As far as I can tell this is a Dirt Rally 2.0 bug, and not a FrexDuino one. But ideas on better ways to solve this issue are welcome.
 
 **Q: Will it burn my precious Frex / encoder / house down?**
 
