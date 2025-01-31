@@ -23,22 +23,20 @@ void pwm16Begin()
 
     // fast pwm mode
     TCCR1A |= (1 << WGM11);
-
     TCCR1B |= (1 << WGM13) | (1 << WGM12);
-
     TCCR1B |= (1 << CS10); // Set clock prescaler to 1 for maximum PWM frequency
+
+    pinModeFast(pwmEnable, OUTPUT);
 }
 
 void pwm16EnableA()
 {
-    // Enable Fast PWM on Pin 9: Set OC1A at BOTTOM and clear OC1A on OCR1A compare
     TCCR1A |= (1 << COM1A1);
     pinModeFast(pwmLeft, OUTPUT);
 }
 
 void pwm16EnableB()
 {
-    // Enable Fast PWM on Pin 10: Set OC1B at BOTTOM and clear OC1B on OCR1B compare
     TCCR1A |= (1 << COM1B1);
     pinModeFast(pwmRight, OUTPUT);
 }
@@ -55,13 +53,9 @@ inline void pwm16B(uint16_t pwmValue)
 
 void initPwmPins()
 {
-    pinModeFast(pwmEnable, OUTPUT);
-
-    pwm16Begin();   // Timer1 and Timer3 configuration: frequency and mode depend on pwmstate byte
-    pwm16A(0);      // Set initial PWM value for Pin 9
-    pwm16EnableA(); // Turn PWM on for Pin 9
-    pwm16B(0);      // Set initial PWM value for Pin 10
-    pwm16EnableB(); // Turn PWM on for Pin 10
+    pwm16Begin(); 
+    pwm16EnableA();
+    pwm16EnableB();
 }
 
 void setMotorPwm(int32_t torque)
@@ -84,6 +78,6 @@ void setMotorPwm(int32_t torque)
     {
         pwm16A(minUpdateRate);
         pwm16B(minUpdateRate);
-        digitalWriteFast(pwmEnable, LOW); // disable bts output when no pwm signal to make it rotate freely
+        digitalWriteFast(pwmEnable, LOW);
     }
 }
