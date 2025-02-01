@@ -12,7 +12,7 @@ The FrexDuino project is meant to be a complete replacement for the Immersion co
  - an [Arduino Leonardo](https://amzn.to/4huuYeO) board to run the firmware
  - a [BTS7960 motor controller](https://amzn.to/4jzXH3w) to drive the wheel's DC motor
  - a [power converter](https://amzn.to/3EcqdIw) to convert from 24V to 5V
- - a [power supply](https://amzn.to/4jzXH3w) to power everything up
+ - a [power supply](https://amzn.to/42GSMbn) to power everything up
  - fuses, wires, project box & a bit of DYI skills to put it all together
 
 #### Example of finished product
@@ -26,7 +26,7 @@ When it all goes well, you will have a box which connects to the Frex wheel (usi
 - **Works**: wheel position, force feedback, and 8 wheel buttons. 
 - **Doesn't**: H-shifter, sequential shifter, hand brake, pedals, LED.
 
-I own the simplest Frex wheel, with only 8 buttons on the wheel adapter (including the 2 paddle shifters). And I have no other shifters or pedals connected to my Frex wheel controller. So far I only implemented the Frex SimWHEEL connections I could test with my own wheel:
+I own the simplest Frex wheel, with only 8 buttons on the wheel adapter (including the 2 paddle shifters). And I've got no other shifters or pedals connected to my Frex wheel controller. So far I have only implemented the Frex SimWHEEL connections I could test with my own wheel:
 
  - optical encoder to keep track of the position
  - DC motor +/- to send the actual FFB signal
