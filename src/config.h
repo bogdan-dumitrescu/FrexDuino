@@ -2,7 +2,8 @@
 
 struct Config
 {
-    uint8_t gain;
+    uint8_t gainPercentage;
+    uint16_t rotationDegrees;
 };
 
 void initConfig();

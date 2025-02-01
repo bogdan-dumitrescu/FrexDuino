@@ -11,6 +11,8 @@ const uint8_t configAddress = sizeof(initialized);
 
 const char writeCommand[cmdSize] = "FD:CFGW";
 const char readCommand[cmdSize] = "FD:CFGR";
+const char replyCommand[cmdSize] = "FD:CFG#";
+const char paramSeparator[2] = "#";
 
 char inputBuffer[128];
 
@@ -47,8 +49,11 @@ void initConfig()
     }
     else
     {
-        config.gain = DEFAULT_GAIN;
+        config.gainPercentage = DEFAULT_GAIN;
+        config.rotationDegrees = DEFAULT_ROTATION;
+
         saveToEeprom();
+
         EEPROM.put(0, initialized);
     }
 }
@@ -71,18 +76,12 @@ bool isCommand(const char *command)
     return true;
 }
 
-void trimInputBuffer()
-{
-    for (uint8_t i = 0; i < cmdSize; i++)
-    {
-        inputBuffer[i] = '0';
-    }
-}
-
 void printCurrentConfig()
 {
-    Serial.print("FD:CFG:");
-    Serial.print(config.gain);
+    Serial.print(replyCommand);
+    Serial.print(config.gainPercentage);
+    Serial.print(paramSeparator);
+    Serial.print(config.rotationDegrees);
 }
 
 bool processSerialCfgCmds()
@@ -104,15 +103,38 @@ bool processSerialCfgCmds()
         }
         else if (isCommand(writeCommand))
         {
-            trimInputBuffer();
-            uint8_t newGain = atoi(inputBuffer);
+            byte index = 0;
+            char *strings[16];
+            char *ptr = NULL;
 
-            config.gain = newGain;
+            // "FD:CFGW#25#360#" (save 25% gain and 360 degrees of rotation)
+            ptr = strtok(inputBuffer, paramSeparator);
+
+            while (ptr != NULL)
+            {
+                strings[index] = ptr;
+                index++;
+                ptr = strtok(NULL, paramSeparator);
+            }
+
+            uint8_t newGain = atoi(strings[1]);
+            uint16_t newRotation = atoi(strings[2]);
+
+            if (newGain >= MIN_GAIN && newGain <= MAX_GAIN)
+            {
+                config.gainPercentage = newGain;
+                configChange = true;
+            }
+
+            if (newRotation >= MIN_ROTATION && newRotation <= MAX_ROTATION)
+            {
+                config.rotationDegrees = newRotation;
+                configChange = true;
+            }
+
             saveToEeprom();
 
             printCurrentConfig();
-
-            configChange = true;
         }
     }
 

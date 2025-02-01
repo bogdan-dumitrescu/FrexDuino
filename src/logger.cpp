@@ -29,9 +29,10 @@ void logForce(int32_t force)
 
 void logButtons(uint8_t *buttons)
 {
+
     Serial.print("Btts: ");
 
-    for (uint8_t i = 0; i < BTN_COUNT; i++)
+    for (uint8_t i = 0; i < BTN_MTRX_ROW_COUNT * BTN_MTRX_CLM_COUNT; i++)
     {
         Serial.print(buttons[i]);
         Serial.print(" ");

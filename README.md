@@ -58,11 +58,11 @@ Note that the Frex connections drawn represent the actual cables coming from the
 
 All pins used for the Arduino are the digital ones. The pins connecting the optical encoder (2 & 3) and motor controller (9 & 10) are linked to timers & interrupts in the code. They cannot be changed without complex code changes. 
 
-The pins for the button matrix can be changed by adjusting the constants defined in the [code](src/constants.h). 
+The pins for the button matrix can be changed by adjusting the constants defined in the [code](src/buttons.cpp). 
 
 #### BTS7960 motor controller & DC Motor 
 
-**Important!** Make sure that the `B+/-` connections of the BTS7960 motor controller are going to the correct polarities of your power supply. Using a fuse here is a good idea. 
+**Important!** Make sure the motor controller's `B+/-` connections are going to the correct polarities of your power supply. Using a fuse here is a good idea. 
 
 On the other hand, you don't need to worry which side is `+` and which is `-` for your wheel's DC motor (`M+/-` connections on the BTS7960). The motor can spin both ways, while the direction of the FFB can be adjusted by swapping pin connections 9 & 10 on the Arduino.
 

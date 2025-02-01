@@ -5,6 +5,9 @@
 
 #include <constants.h>
 
+const uint8_t BTN_MTRX_ROW_PINS[BTN_MTRX_ROW_COUNT] = {12, 13};     // Arduino pins for connecting rows
+const uint8_t BTN_MTRX_CLM_PINS[BTN_MTRX_CLM_COUNT] = {4, 5, 6, 7}; // Arduino pins for connecting rows
+
 void setMatrixRow(uint8_t i, uint8_t val)
 {
     digitalWriteFast(BTN_MTRX_ROW_PINS[i], val);
